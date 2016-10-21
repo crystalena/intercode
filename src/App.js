@@ -5,6 +5,23 @@ import Checkout from './components/checkout/Checkout';
 import './App.css';
 
 class App extends Component {
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      invalid: false,
+      accName: 'Apple'
+    };
+  }
+
+  onClick() {
+    let input = document.getElementById("accountName");
+    if (input.value === '') {
+      this.setState({ invalid: true });
+    } else {
+      this.setState({ accName: input.value });
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -12,8 +29,11 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-          <Login />
-          <Checkout />
+        {
+          this.state.accName === '' ?
+            <Login onClick={ this.onClick.bind(this) } error={ this.state.invalid } /> :
+            <Checkout accName={ this.state.accName } />
+        }
       </div>
     );
   }

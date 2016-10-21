@@ -7,7 +7,7 @@ class Adbox extends Component {
       <div className="adBox" onClick={ this.props.onClick }>
         <h2 className="heading">{ this.props.name }</h2>
         <p className="price">{ this.props.price }</p>
-        { this.props.special && <p className="special">Special price just for you</p> }
+        { this.props.special && <p className="special">Special price just for you from the { this.props.specialAdNumber } ad!</p> }
       </div>
     );
   }

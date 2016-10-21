@@ -7,22 +7,25 @@ class Login extends Component {
       <div className="login">
           <div className="label">
             <label className="formLabel required" htmlFor="accountName">Account name</label>
-            <span className="required">required</span>
           </div>
           <div className="formRow">
             <input aria-required="true"
                    aria-describedby="accountNameInvalid"
                    maxLength="255"
-                   className="formInput"
+                   className={ this.props.error ? "formInput inputNotValid" : "formInput" }
                    id="accountName"
                    type="text"
                    required/>
-            { !this.props.error && <div className="inputValid"></div> }
           </div>
-          {this.props.touched && this.props.error &&
+          { this.props.error &&
           <div className="fieldNotValid"
                id="accountNameInvalid"
-               role="alert">{this.props.error}</div>}
+               role="alert">Please enter your account name</div> }
+        <button className="button"
+                onClick={ this.props.onClick }
+                onKeyUp={ this.props.onClick }>
+          <span className="buttonText">Log in</span>
+        </button>
       </div>
     );
   }

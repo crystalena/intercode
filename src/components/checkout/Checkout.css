@@ -1,5 +1,6 @@
 .checkout {
   display: flex;
+  flex-wrap: wrap;
   margin: 20px auto;
   max-width: 1000px;
 }
@@ -16,4 +17,18 @@
 
 .ads {
   width: 30%;
+}
+
+.acc {
+  width: 100%;
+  color: #6c6c6c;
+  text-align: left;
+}
+
+.total {
+  width: 100%;
+  border-top: 1px solid #eee;
+  padding: 20px 0;
+  text-align: left;
+  color: #6c6c6c;
 }
