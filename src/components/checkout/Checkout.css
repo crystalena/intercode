@@ -1,0 +1,19 @@
+.checkout {
+  display: flex;
+  margin: 20px auto;
+  max-width: 1000px;
+}
+
+.table {
+  width: 70%;
+}
+
+.cart {
+  text-align: left;
+  color: #464646;
+  margin: 16px 10px;
+}
+
+.ads {
+  width: 30%;
+}

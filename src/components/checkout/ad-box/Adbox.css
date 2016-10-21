@@ -1,0 +1,37 @@
+.adBox {
+  padding: 10px;
+  margin: 10px 0;
+  background: #f7f7f7;
+  border: 1px solid #eee;
+  border-bottom-width: 2px;
+  cursor: pointer;
+}
+
+.heading {
+  color: #464646;
+  font-size: 2rem;
+  margin: 9px 0;
+}
+
+.price {
+  color: #6c6c6c;
+  font-size: 1.1rem;
+  margin: 9px 0;
+  vertical-align: baseline;
+}
+
+.price:before {
+  content: "$"
+}
+
+.price:after {
+  color: #6c6c6c;
+  font-size: 0.8rem;
+  content: "+GST"
+}
+
+.special {
+  color: #6c6c6c;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}

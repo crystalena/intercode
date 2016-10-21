@@ -1,0 +1,29 @@
+.listing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  border: 1px solid #eee;
+  color: #6c6c6c;
+}
+
+.listName {
+  width: 80%;
+  padding: 5px 5px 5px 45px;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.listPrice {
+  width: 20%;
+  padding: 10px;
+}
+
+.listPrice:before {
+  content: "$";
+}
+
+.cross {
+  padding: 20px;
+  cursor: pointer;
+}

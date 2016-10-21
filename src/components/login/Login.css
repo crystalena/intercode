@@ -1,0 +1,59 @@
+.login {
+  width: 50%;
+  margin: 40px auto;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.required {
+  margin-bottom: 20px;
+  color: #222222;
+  font-size: 1.2rem;
+}
+
+.required:before {
+  content: '* ';
+  color: #6c6c6c;
+  display: inline;
+}
+
+.formItem {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.formLabel {
+  color: #212121;
+  margin-bottom: 10px;
+}
+
+.formRow {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.formInput {
+  color: #6c6c6c;
+  width: 90%;
+  padding: 10px 15px;
+  line-height: 20px;
+  height: 40px;
+  border: 1px solid #bbbbbb;
+  border-radius: 2px;
+  font-size: 1.4rem;
+  appearance: none;
+}
+.formInput:focus,
+.formInput:active {
+   border: 1px solid #82afd5;
+   box-shadow: 0 0 2px 0 #82afd5;
+   outline: none;
+ }
