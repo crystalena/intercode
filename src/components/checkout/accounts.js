@@ -42,7 +42,7 @@ export const accounts = [
       },
       {
         type: DISCOUNT_PRICE,
-        discount: {id: 'premium', starts: 3, price: 389.99}
+        offer: {id: 'premium', starts: 3, price: 389.99}
       }
     ]
   }

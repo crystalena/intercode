@@ -21,8 +21,15 @@
 
 .acc {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: #6c6c6c;
   text-align: left;
+}
+
+.exit {
+  cursor: pointer;
 }
 
 .total {

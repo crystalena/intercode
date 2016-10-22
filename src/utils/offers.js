@@ -1,5 +1,3 @@
-import { defaultAds } from '../constants/ads.js';
-
 export function getSpecificAdsCount(adId, cart) {
   let total=0;
   for (let i=0; i<cart.length; i++) {
@@ -11,22 +9,42 @@ export function getSpecificAdsCount(adId, cart) {
   return total;
 }
 
-export function getDiscountedPriceForNumberOfAds(adId, cart, number, discountedPrice) {
-  let adPrice = defaultAds[`${adId}`].price;
-  console.log(adPrice);
-
-  if (getSpecificAdsCount(adId, cart) >= number) {
-    return discountedPrice;
+export function getTotal(cart) {
+  let total = 0;
+  for (let i=0; i<cart.length; i++) {
+    let obj = cart[i];
+    total+= obj.price;
   }
-
-  return adPrice;
+  return total.toFixed(2);
 }
 
-export function getMoreForLessAdsDiscount(adId, cart, totalAdsNumber, paidAdsNumber) {
-  let adPrice = defaultAds[`${adId}`].price;
-  console.log(adPrice);
-  let freeAds = totalAdsNumber - paidAdsNumber;
-  let timesDiscount = getSpecificAdsCount(adId, cart) % totalAdsNumber;
+export function getFreeAdsCount(totalAds, bulkTotal, bulkPaid) {
+  return Math.floor(totalAds / bulkTotal) * (bulkTotal - bulkPaid);
+}
 
-  return timesDiscount * freeAds * adPrice;
+export function updateCartAdsPrice(adId, price, cart) {
+  let newCart = [];
+  for (let i=0; i<cart.length; i++) {
+    let obj = cart[i];
+    if (obj.id === adId) {
+      obj.price = price;
+    }
+    newCart.push(obj);
+  }
+  return newCart;
+}
+
+export function updateCartAdsBulk(adId, freeAds, cart) {
+  let newCart = [];
+  let count = 0;
+  for (let i=0; i<cart.length; i++) {
+    let obj = cart[i];
+    if ((obj.id === adId) && (count < freeAds)) {
+      obj.price = 0;
+      count++;
+    }
+    newCart.push(obj);
+  }
+
+  return newCart;
 }

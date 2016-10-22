@@ -3,7 +3,7 @@ import Adbox from './ad-box/Adbox';
 import Listing from './listing/Listing';
 import { defaultAds } from '../../constants/ads';
 import { accounts, MORE_FOR_LESS, DISCOUNT_PRICE } from './accounts';
-import { getDiscountedPriceForNumberOfAds, getMoreForLessAdsDiscount, getSpecificAdsCount } from '../../utils/offers';
+import { getSpecificAdsCount, getTotal, getFreeAdsCount, updateCartAdsPrice, updateCartAdsBulk } from '../../utils/offers';
 import './Checkout.css';
 
 class Checkout extends Component {
@@ -16,12 +16,6 @@ class Checkout extends Component {
     }
   }
 
-  componentDidMount() {
-  }
-
-  componentDidUpdate() {
-  }
-
   getPricingForAds() {
     let newPricing = [];
 
@@ -31,7 +25,8 @@ class Checkout extends Component {
         id: obj.id,
         name: obj.name,
         defaultPrice: obj.price,
-        discount: this.getDiscountPrice(obj.id)
+        discount: this.getDiscountPrice(obj.id),
+        bulk: this.getBulkPrice(obj.id)
       };
       newPricing.push(newObj);
     }
@@ -39,78 +34,53 @@ class Checkout extends Component {
     return newPricing;
   }
 
-  getDiscountPrice(adId) {
+  getOffers() {
     for (let i=0; i<accounts.length; i++) {
       let obj = accounts[i];
       if (obj.name === this.props.accName) {
+        return obj.offers;
+      }
+    }
+  }
 
-        let offers = obj.offers;
-        for (let j=0; j<offers.length; j++) {
-          let offer = offers[j];
+  getDiscountPrice(adId) {
+    let offers = this.getOffers();
+    if (offers) {
+      for (let j=0; j<offers.length; j++) {
+        let offer = offers[j];
 
-          if (offer.type === DISCOUNT_PRICE && adId === offer.offer.id) {
-             return { starts: offer.offer.starts, price: offer.offer.price };
-          }
+        if (offer.type === DISCOUNT_PRICE && adId === offer.offer.id) {
+          return {starts: offer.offer.starts, price: offer.offer.price};
         }
       }
     }
   }
 
-  // getNewPriceForAds(ad, starts, price) {
-  //   let ads = defaultAds;
-  //   for (let i=0; i<ads.length; i++) {
-  //     let obj = ads[i];
-  //     if (obj.id === ad) {
-  //       obj.price = price;
-  //       obj['special'] = true;
-  //       obj['from'] = starts;
-  //     }
-  //   }
-  //   this.setState({ specialPricing: ads });
-  // }
+  getBulkPrice(adId) {
+    let offers = this.getOffers();
+    if (offers) {
+      for (let j=0; j<offers.length; j++) {
+        let offer = offers[j];
 
-  // findOffers() {
-  //   for (let i=0; i<accounts.length; i++) {
-  //     let obj = accounts[i];
-  //     if (obj.name === this.props.accName) {
-  //
-  //       let offers = obj.offers;
-  //       for (let j=0; j<offers.length; j++) {
-  //         let offer = offers[j];
-  //
-  //         if (offer.type === MORE_FOR_LESS) {
-  //           this.setState({ moreForLess: offer.offer });
-  //         }
-  //         if (offer.type === DISCOUNT_PRICE) {
-  //           let o = offer.offer;
-  //           this.setState({ discount: o });
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-  // getDiscount() {
-  //   let discount = this.state.discount;
-  //   if (discount) {
-  //     let ad = discount.id;
-  //     let oldPrice = this.state.specialPricing.filter((i) => { return i.id === ad})[0].price;
-  //
-  //     let adCount = getSpecificAdsCount(ad, this.state.cart);
-  //     if (adCount >= discount.starts) {
-  //       return (oldPrice - discount.price) * adCount;
-  //     }
-  //   }
-  // }
-
-  getTotal() {
-    let cart = this.state.cart;
-    let total = 0;
-    for (let i=0; i<cart.length; i++) {
-      let obj = cart[i];
-      total+= obj.price;
+        if (offer.type === MORE_FOR_LESS && adId === offer.offer.id) {
+          return {total: offer.offer.total, paid: offer.offer.paid};
+        }
+      }
     }
-    return total.toFixed(2);
+  }
+
+  applyDiscount(ad) {
+    if (ad.discount && getSpecificAdsCount(ad.id, this.state.cart) >= ad.discount.starts) {
+      this.setState({ cart: updateCartAdsPrice(ad.id, ad.discount.price, this.state.cart) });
+    }
+  }
+
+  applyBulk(ad) {
+    let totalAds = getSpecificAdsCount(ad.id, this.state.cart);
+    if (ad.bulk && totalAds >= ad.bulk.total) {
+      let freeAds = getFreeAdsCount(totalAds, ad.bulk.total, ad.bulk.paid);
+      this.setState({ cart: updateCartAdsBulk(ad.id, freeAds, this.state.cart) });
+    }
   }
 
   addAd(ad) {
@@ -120,27 +90,20 @@ class Checkout extends Component {
       name: ad.name,
       defaultPrice: ad.defaultPrice,
       price: (ad.discount && getSpecificAdsCount(ad.id, cart) >= ad.discount.starts) ? ad.discount.price : ad.defaultPrice,
-      starts: ad.discount ? ad.discount.starts : 0
+      starts: ad.discount ? ad.discount.starts : 0,
+      bulk: ad.bulk && ad.bulk
     };
     cart.push(newAd);
     this.setState({ cart: cart });
 
-    if (ad.discount && getSpecificAdsCount(ad.id, cart) >= ad.discount.starts) {
-      this.setState({ cart: this.updateCart(ad.id, ad.discount.price) });
-    }
+    this.applyDiscount(ad);
+    this.applyBulk(ad);
   }
 
-  updateCart(adId, price) {
-    let cart = this.state.cart;
-    let newCart = [];
-    for (let i=0; i<cart.length; i++) {
-      let obj = cart[i];
-      if (obj.id === adId) {
-        obj.price = price;
-      }
-      newCart.push(obj);
+  checkDiscount(ad) {
+    if (ad.starts && getSpecificAdsCount(ad.id, this.state.cart) < ad.starts) {
+      this.setState({ cart: updateCartAdsPrice(ad.id, ad.defaultPrice, this.state.cart) });
     }
-    return newCart;
   }
 
   removeAd(ad) {
@@ -151,16 +114,21 @@ class Checkout extends Component {
        cart.splice(removeAdIndex, 1);
     this.setState({ cart: cart });
 
-    if (ad.starts && getSpecificAdsCount(ad.id, cart) < ad.starts) {
-      this.setState({ cart: this.updateCart(ad.id, ad.defaultPrice) });
+    this.checkDiscount(ad);
+
+    if (ad.price === 0) {
+      this.applyBulk(ad);
     }
   }
 
+  onExit() {
+    location.reload();
+  }
 
   render() {
     return (
       <div className="checkout">
-        { this.props.accName && <h1 className="acc">Account name: { this.props.accName }</h1> }
+        { this.props.accName && <div className="acc"><h1>Account name: { this.props.accName }</h1><div className="exit" onClick={ this.onExit.bind(this) }>Log out</div></div> }
         <div className="table">
           { this.state.cart.length > 0 && <p className="cart">Cart:</p>}
           {
@@ -183,8 +151,9 @@ class Checkout extends Component {
                        key={ `${ad.id}+${Math.random()}` }
                        onClick={ this.addAd.bind(this, ad) }
                        specialAdNumber={ ad.discount && ad.discount.starts }
-                       special={ ad.discount }
+                       discount={ ad.discount }
                        defaultPrice={ ad.defaultPrice }
+                       bulk={ ad.bulk }
                 />
               )
             })
@@ -192,7 +161,7 @@ class Checkout extends Component {
         </div>
         { this.state.cart.length > 0 &&
         <div className="total">
-          <div>Total: $ { this.getTotal() }</div>
+          <div>Total: $ { getTotal(this.state.cart) }</div>
         </div> }
       </div>
     );
