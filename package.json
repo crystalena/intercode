@@ -5,6 +5,7 @@
   "devDependencies": {
     "react-scripts": "0.6.1"
   },
+  "homepage": "http://crystalena.github.io/intercode",
   "dependencies": {
     "react": "^15.3.2",
     "react-addons-update": "^15.3.2",
