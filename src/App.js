@@ -9,7 +9,7 @@ class App extends Component {
     super(props, context);
     this.state = {
       invalid: false,
-      accName: 'Apple'
+      accName: 'Nike'
     };
   }
 

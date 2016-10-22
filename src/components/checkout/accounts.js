@@ -7,7 +7,7 @@ export const accounts = [
     offers: [
       {
         type: MORE_FOR_LESS,
-        offer: {ad: 'classic', total: 3, paid: 2}
+        offer: {id: 'classic', total: 3, paid: 2}
       }
     ]
   },
@@ -16,7 +16,7 @@ export const accounts = [
     offers: [
       {
         type: DISCOUNT_PRICE,
-        offer: {ad: 'standout', starts: 1, price: 299.99}
+        offer: {id: 'standout', starts: 1, price: 299.99}
       }
     ]
   },
@@ -25,7 +25,7 @@ export const accounts = [
     offers: [
       {
         type: DISCOUNT_PRICE,
-        offer: {ad: 'premium', starts: 4, price: 379.99}
+        offer: {id: 'premium', starts: 4, price: 379.99}
       }
     ]
   },
@@ -34,15 +34,15 @@ export const accounts = [
     offers: [
       {
         type: MORE_FOR_LESS,
-        offer: {ad: 'classic', starts: 5, paid: 4}
+        offer: {id: 'classic', total: 5, paid: 4}
       },
       {
         type: DISCOUNT_PRICE,
-        offer: {ad: 'standout', starts: 1, paid: 309.99}
+        offer: {id: 'standout', starts: 1, price: 309.99}
       },
       {
         type: DISCOUNT_PRICE,
-        discount: {ad: 'premium', starts: 3, paid: 389.99}
+        discount: {id: 'premium', starts: 3, price: 389.99}
       }
     ]
   }
