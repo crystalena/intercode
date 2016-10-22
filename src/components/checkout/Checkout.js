@@ -37,7 +37,7 @@ class Checkout extends Component {
   getOffers() {
     for (let i=0; i<accounts.length; i++) {
       let obj = accounts[i];
-      if (obj.name === this.props.accName) {
+      if (obj.name.toLowerCase() === this.props.accName.toLowerCase()) {
         return obj.offers;
       }
     }
@@ -115,10 +115,7 @@ class Checkout extends Component {
     this.setState({ cart: cart });
 
     this.checkDiscount(ad);
-
-    if (ad.price === 0) {
-      this.applyBulk(ad);
-    }
+    this.applyBulk(ad);
   }
 
   onExit() {

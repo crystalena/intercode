@@ -13,7 +13,8 @@ class App extends Component {
     };
   }
 
-  onClick() {
+  onClick(e) {
+    e.preventDefault();
     let input = document.getElementById("accountName");
     if (input.value === '') {
       this.setState({ invalid: true });
@@ -31,7 +32,7 @@ class App extends Component {
         </div>
         {
           this.state.accName === '' ?
-            <Login onClick={ this.onClick.bind(this) } error={ this.state.invalid } /> :
+            <Login onClick={ (e) => this.onClick(e) } error={ this.state.invalid } /> :
             <Checkout accName={ this.state.accName } />
         }
       </div>
